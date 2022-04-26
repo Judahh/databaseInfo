@@ -24,6 +24,19 @@ const writeDatabaseRequestTimeoutNumber = writeDatabaseRequestTimeout
   ? +writeDatabaseRequestTimeout
   : 60000;
 
+const writeDatabaseEncryptionDisabledEnv =
+  process.env.DATABASE_ENCRYPTION_DISABLED?.toLowerCase() === 'true' ||
+  process.env.DATABASE_ENCRYPTION_DISABLED?.toLowerCase() === '1' ||
+  process.env.DATABASE_WRITE_ENCRYPTION_DISABLED?.toLowerCase() === 'true' ||
+  process.env.DATABASE_WRITE_ENCRYPTION_DISABLED?.toLowerCase() === '1';
+
+const writeDatabaseEncryptionDisabled = writeDatabaseEncryptionDisabledEnv
+  ? {
+      encrypt: false,
+      trustServerCertificate: false,
+    }
+  : undefined;
+
 const eventInfo =
   process.env.DATABASE_DISABLED?.toLowerCase() === 'true' ||
   process.env.DATABASE_DISABLED?.toLowerCase() === '1' ||
@@ -37,7 +50,7 @@ const eventInfo =
           process.env.DATABASE_WRITE_CONNECTION_TYPE,
         options: writeDatabaseOptions
           ? JSON.parse(writeDatabaseOptions)
-          : undefined,
+          : writeDatabaseEncryptionDisabled,
         database:
           process.env.DATABASE_NAME ||
           process.env.DATABASE_WRITE_NAME ||
@@ -74,6 +87,19 @@ const readDatabaseRequestTimeoutNumber = readDatabaseRequestTimeout
   ? +readDatabaseRequestTimeout
   : 60000;
 
+const readDatabaseEncryptionDisabledEnv =
+  process.env.DATABASE_ENCRYPTION_DISABLED?.toLowerCase() === 'true' ||
+  process.env.DATABASE_ENCRYPTION_DISABLED?.toLowerCase() === '1' ||
+  process.env.DATABASE_READ_ENCRYPTION_DISABLED?.toLowerCase() === 'true' ||
+  process.env.DATABASE_READ_ENCRYPTION_DISABLED?.toLowerCase() === '1';
+
+const readDatabaseEncryptionDisabled = readDatabaseEncryptionDisabledEnv
+  ? {
+      encrypt: false,
+      trustServerCertificate: false,
+    }
+  : undefined;
+
 const readInfo =
   process.env.DATABASE_DISABLED?.toLowerCase() === 'true' ||
   process.env.DATABASE_DISABLED?.toLowerCase() === '1' ||
@@ -87,10 +113,7 @@ const readInfo =
           process.env.DATABASE_READ_CONNECTION_TYPE,
         options: readDatabaseOptions
           ? JSON.parse(readDatabaseOptions)
-          : {
-              encrypt: false,
-              trustServerCertificate: false,
-            },
+          : readDatabaseEncryptionDisabled,
         database:
           process.env.DATABASE_NAME || process.env.DATABASE_READ_NAME || 'read',
         host: process.env.DATABASE_HOST || process.env.DATABASE_READ_HOST,
