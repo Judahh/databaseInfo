@@ -132,11 +132,35 @@ let eventDatabase;
 const setEventDatabase = (journaly) => {
   if (eventInfo === undefined) return undefined;
   else eventDatabase = new PersistenceInfo(eventInfo, journaly);
+  if (
+    process.env.SHOW_DATABASE_INFO?.toLowerCase() === 'true' ||
+    process.env.SHOW_DATABASE_INFO?.toLowerCase() === '1' ||
+    eventDatabase !== undefined
+  ) {
+    console.log(
+      'eventInfo:',
+      eventDatabase?.host,
+      eventDatabase?.port,
+      eventDatabase?.database
+    );
+  }
 };
 
 const setReadDatabase = (journaly) => {
   if (readInfo === undefined) return undefined;
   else readDatabase = new PersistenceInfo(readInfo, journaly);
+  if (
+    process.env.SHOW_DATABASE_INFO?.toLowerCase() === 'true' ||
+    process.env.SHOW_DATABASE_INFO?.toLowerCase() === '1' ||
+    readDatabase !== undefined
+  ) {
+    console.log(
+      'readInfo:',
+      readDatabase?.host,
+      readDatabase?.port,
+      readDatabase?.database
+    );
+  }
 };
 
 const getEventDatabase = (journaly?) => {
@@ -160,27 +184,6 @@ const getReadDatabase = (journaly?) => {
   }
   return undefined;
 };
-
-if (
-  process.env.SHOW_DATABASE_INFO?.toLowerCase() === 'true' ||
-  process.env.SHOW_DATABASE_INFO?.toLowerCase() === '1'
-) {
-  if (eventDatabase !== undefined)
-    console.log(
-      'eventInfo:',
-      eventDatabase?.host,
-      eventDatabase?.port,
-      eventDatabase?.database
-    );
-
-  if (readDatabase !== undefined)
-    console.log(
-      'readInfo:',
-      readDatabase?.host,
-      readDatabase?.port,
-      readDatabase?.database
-    );
-}
 
 export {
   eventInfo,
