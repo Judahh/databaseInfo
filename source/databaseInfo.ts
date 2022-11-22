@@ -1,16 +1,32 @@
 import { PersistenceInfo } from 'flexiblepersistence';
 import { ConnectionOptions } from 'tls';
-const writeDatabaseOptions =
+let writeDatabaseOptions =
   process.env.DATABASE_OPTIONS || process.env.DATABASE_WRITE_OPTIONS;
 const writeDatabaseSSLEnv =
   process.env.DATABASE_SSL || process.env.DATABASE_WRITE_SSL || 'false';
-const writeDatabaseSSL:
+let writeDatabaseSSL:
   | boolean
   | ConnectionOptions
   | ConnectionOptions
-  | undefined = writeDatabaseSSLEnv
-  ? JSON.parse(writeDatabaseSSLEnv)
-  : undefined;
+  | string
+  | undefined;
+
+try {
+  writeDatabaseOptions = writeDatabaseOptions
+    ? JSON.parse(writeDatabaseOptions)
+    : undefined;
+} catch (error) {
+  writeDatabaseOptions = writeDatabaseOptions;
+}
+
+try {
+  writeDatabaseSSL = writeDatabaseSSLEnv
+    ? JSON.parse(writeDatabaseSSLEnv)
+    : undefined;
+} catch (error) {
+  writeDatabaseSSL = writeDatabaseSSLEnv;
+}
+
 const writeDatabaseConnectionTimeout =
   process.env.DATABASE_CONNECTION_TIMEOUT ||
   process.env.DATABASE_WRITE_CONNECTION_TIMEOUT;
@@ -37,6 +53,10 @@ const writeDatabaseEncryptionDisabled = writeDatabaseEncryptionDisabledEnv
     }
   : undefined;
 
+writeDatabaseOptions = writeDatabaseOptions
+  ? JSON.parse(writeDatabaseOptions)
+  : writeDatabaseEncryptionDisabled;
+
 const eventInfo =
   process.env.DATABASE_DISABLED?.toLowerCase() === 'true' ||
   process.env.DATABASE_DISABLED?.toLowerCase() === '1' ||
@@ -48,9 +68,7 @@ const eventInfo =
         connectionType:
           process.env.DATABASE_CONNECTION_TYPE ||
           process.env.DATABASE_WRITE_CONNECTION_TYPE,
-        options: writeDatabaseOptions
-          ? JSON.parse(writeDatabaseOptions)
-          : writeDatabaseEncryptionDisabled,
+        options: writeDatabaseOptions,
         database:
           process.env.DATABASE_NAME ||
           process.env.DATABASE_WRITE_NAME ||
@@ -65,15 +83,33 @@ const eventInfo =
         requestTimeout: writeDatabaseRequestTimeoutNumber,
       };
 
-const readDatabaseOptions =
+let readDatabaseOptions =
   process.env.DATABASE_OPTIONS || process.env.DATABASE_READ_OPTIONS;
 const readDatabaseSSLEnv =
   process.env.DATABASE_SSL || process.env.DATABASE_READ_SSL || 'false';
-const readDatabaseSSL:
+let readDatabaseSSL:
   | boolean
   | ConnectionOptions
   | ConnectionOptions
-  | undefined = readDatabaseSSLEnv ? JSON.parse(readDatabaseSSLEnv) : undefined;
+  | string
+  | undefined;
+
+try {
+  readDatabaseOptions = readDatabaseOptions
+    ? JSON.parse(readDatabaseOptions)
+    : undefined;
+} catch (error) {
+  readDatabaseOptions = readDatabaseOptions;
+}
+
+try {
+  readDatabaseSSL = readDatabaseSSLEnv
+    ? JSON.parse(readDatabaseSSLEnv)
+    : undefined;
+} catch (error) {
+  readDatabaseSSL = readDatabaseSSLEnv;
+}
+
 const readDatabaseConnectionTimeout =
   process.env.DATABASE_CONNECTION_TIMEOUT ||
   process.env.DATABASE_READ_CONNECTION_TIMEOUT;
@@ -100,6 +136,10 @@ const readDatabaseEncryptionDisabled = readDatabaseEncryptionDisabledEnv
     }
   : undefined;
 
+readDatabaseOptions = readDatabaseOptions
+  ? JSON.parse(readDatabaseOptions)
+  : readDatabaseEncryptionDisabled;
+
 const readInfo =
   process.env.DATABASE_DISABLED?.toLowerCase() === 'true' ||
   process.env.DATABASE_DISABLED?.toLowerCase() === '1' ||
@@ -111,9 +151,7 @@ const readInfo =
         connectionType:
           process.env.DATABASE_CONNECTION_TYPE ||
           process.env.DATABASE_READ_CONNECTION_TYPE,
-        options: readDatabaseOptions
-          ? JSON.parse(readDatabaseOptions)
-          : readDatabaseEncryptionDisabled,
+        options: readDatabaseOptions,
         database:
           process.env.DATABASE_NAME || process.env.DATABASE_READ_NAME || 'read',
         host: process.env.DATABASE_HOST || process.env.DATABASE_READ_HOST,
