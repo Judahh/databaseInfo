@@ -1,6 +1,6 @@
 {
   "name": "@flexiblepersistence/database-info",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "A implementation for Flexible Persistence DAO's PoolAdapter",
   "main": "dist/source/index.js",
   "keywords": [
@@ -33,8 +33,7 @@
     "url": "https://github.com/Judahh/flexiblePersistence/issues"
   },
   "homepage": "https://github.com/Judahh/flexiblePersistence#readme",
-  "dependencies": {
-  },
+  "dependencies": {},
   "devDependencies": {
     "flexiblepersistence": "latest",
     "@flexiblepersistence/dao": "latest",
