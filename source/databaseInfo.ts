@@ -1,6 +1,6 @@
 import { PersistenceInfo } from 'flexiblepersistence';
 import { ConnectionOptions } from 'tls';
-let writeDatabaseOptions =
+let writeDatabaseOptions: object | string | undefined =
   process.env.DATABASE_OPTIONS || process.env.DATABASE_WRITE_OPTIONS;
 const writeDatabaseSSLEnv =
   process.env.DATABASE_SSL || process.env.DATABASE_WRITE_SSL || 'false';
@@ -54,7 +54,7 @@ const writeDatabaseEncryptionDisabled = writeDatabaseEncryptionDisabledEnv
   : undefined;
 
 writeDatabaseOptions = writeDatabaseOptions
-  ? JSON.parse(writeDatabaseOptions)
+  ? writeDatabaseOptions
   : writeDatabaseEncryptionDisabled;
 
 const eventInfo =
@@ -83,7 +83,7 @@ const eventInfo =
         requestTimeout: writeDatabaseRequestTimeoutNumber,
       };
 
-let readDatabaseOptions =
+let readDatabaseOptions: object | string | undefined =
   process.env.DATABASE_OPTIONS || process.env.DATABASE_READ_OPTIONS;
 const readDatabaseSSLEnv =
   process.env.DATABASE_SSL || process.env.DATABASE_READ_SSL || 'false';
@@ -137,7 +137,7 @@ const readDatabaseEncryptionDisabled = readDatabaseEncryptionDisabledEnv
   : undefined;
 
 readDatabaseOptions = readDatabaseOptions
-  ? JSON.parse(readDatabaseOptions)
+  ? readDatabaseOptions
   : readDatabaseEncryptionDisabled;
 
 const readInfo =

@@ -1,6 +1,6 @@
 {
   "name": "@flexiblepersistence/database-info",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "A implementation for Flexible Persistence DAO's PoolAdapter",
   "main": "dist/source/index.js",
   "keywords": [
