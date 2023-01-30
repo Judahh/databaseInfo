@@ -218,7 +218,7 @@ const getEventDatabase = (journaly?) => {
 };
 
 const getReadDatabase = (journaly?) => {
-  if (readInfo === undefined) return undefined;
+  if (readInfo === undefined && eventInfo !== undefined) return undefined;
   if (readDatabase !== undefined) {
     return readDatabase;
   } else if (journaly) {
