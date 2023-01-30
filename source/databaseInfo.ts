@@ -186,7 +186,10 @@ const setEventDatabase = (journaly) => {
 
 const setReadDatabase = (journaly) => {
   if (readInfo === undefined) {
-    if (eventInfo === undefined) return journaly;
+    if (eventInfo === undefined) {
+      readDatabase = journaly;
+      return readDatabase;
+    }
     return undefined;
   } else readDatabase = new PersistenceInfo(readInfo, journaly);
   if (
