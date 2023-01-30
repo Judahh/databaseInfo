@@ -185,8 +185,10 @@ const setEventDatabase = (journaly) => {
 };
 
 const setReadDatabase = (journaly) => {
-  if (readInfo === undefined) return undefined;
-  else readDatabase = new PersistenceInfo(readInfo, journaly);
+  if (readInfo === undefined) {
+    if (eventInfo === undefined) return journaly;
+    return undefined;
+  } else readDatabase = new PersistenceInfo(readInfo, journaly);
   if (
     process.env.SHOW_DATABASE_INFO?.toLowerCase() === 'true' ||
     process.env.SHOW_DATABASE_INFO?.toLowerCase() === '1' ||
