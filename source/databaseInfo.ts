@@ -19,6 +19,20 @@ try {
   writeDatabaseOptions = writeDatabaseOptions;
 }
 
+const writeDatabaseAdditionalParamsString: string | undefined =
+  process.env.DATABASE_ADDITIONAL_PARAMS ||
+  process.env.DATABASE_WRITE_ADDITIONAL_PARAMS;
+
+let writeDatabaseAdditionalParams: { [key: string]: any } | undefined;
+
+try {
+  writeDatabaseAdditionalParams = writeDatabaseAdditionalParamsString
+    ? JSON.parse(writeDatabaseAdditionalParamsString)
+    : undefined;
+} catch (error) {
+  writeDatabaseOptions = writeDatabaseOptions;
+}
+
 try {
   writeDatabaseSSL = writeDatabaseSSLEnv
     ? JSON.parse(writeDatabaseSSLEnv)
@@ -64,6 +78,7 @@ const eventInfo =
   process.env.DATABASE_WRITE_DISABLED?.toLowerCase() === '1'
     ? undefined
     : {
+        ...(writeDatabaseAdditionalParams || {}),
         uri: process.env.DATABASE_URI || process.env.DATABASE_WRITE_URI,
         connectionType:
           process.env.DATABASE_CONNECTION_TYPE ||
@@ -100,6 +115,20 @@ try {
     : undefined;
 } catch (error) {
   readDatabaseOptions = readDatabaseOptions;
+}
+
+const readDatabaseAdditionalParamsString: string | undefined =
+  process.env.DATABASE_ADDITIONAL_PARAMS ||
+  process.env.DATABASE_READ_ADDITIONAL_PARAMS;
+
+let readDatabaseAdditionalParams: { [key: string]: any } | undefined;
+
+try {
+  readDatabaseAdditionalParams = readDatabaseAdditionalParamsString
+    ? JSON.parse(readDatabaseAdditionalParamsString)
+    : undefined;
+} catch (error) {
+  writeDatabaseOptions = writeDatabaseOptions;
 }
 
 try {
@@ -147,6 +176,7 @@ const readInfo =
   process.env.DATABASE_READ_DISABLED?.toLowerCase() === '1'
     ? undefined
     : {
+        ...(readDatabaseAdditionalParams || {}),
         uri: process.env.DATABASE_URI || process.env.DATABASE_READ_URI,
         connectionType:
           process.env.DATABASE_CONNECTION_TYPE ||
