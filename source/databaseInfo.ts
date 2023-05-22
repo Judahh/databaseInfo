@@ -1,45 +1,31 @@
 import { PersistenceInfo } from 'flexiblepersistence';
 import { ConnectionOptions } from 'tls';
-let writeDatabaseOptions: object | string | undefined =
-  process.env.DATABASE_OPTIONS || process.env.DATABASE_WRITE_OPTIONS;
 const writeDatabaseSSLEnv =
   process.env.DATABASE_SSL || process.env.DATABASE_WRITE_SSL || 'false';
-let writeDatabaseSSL:
-  | boolean
-  | ConnectionOptions
-  | ConnectionOptions
-  | string
-  | undefined;
 
-try {
-  writeDatabaseOptions = writeDatabaseOptions
-    ? JSON.parse(writeDatabaseOptions)
-    : undefined;
-} catch (error) {
-  writeDatabaseOptions = writeDatabaseOptions;
-}
+const parse = <T = any>(value) => {
+  try {
+    return JSON.parse(value) as T | undefined;
+  } catch (error) {
+    return value as T | undefined;
+  }
+};
+
+let writeDatabaseOptions = parse<object | string>(
+  process.env.DATABASE_OPTIONS || process.env.DATABASE_WRITE_OPTIONS
+);
 
 const writeDatabaseAdditionalParamsString: string | undefined =
   process.env.DATABASE_ADDITIONAL_PARAMS ||
   process.env.DATABASE_WRITE_ADDITIONAL_PARAMS;
 
-let writeDatabaseAdditionalParams: { [key: string]: any } | undefined;
+const writeDatabaseAdditionalParams = parse<{ [key: string]: any }>(
+  writeDatabaseAdditionalParamsString
+);
 
-try {
-  writeDatabaseAdditionalParams = writeDatabaseAdditionalParamsString
-    ? JSON.parse(writeDatabaseAdditionalParamsString)
-    : undefined;
-} catch (error) {
-  writeDatabaseOptions = writeDatabaseOptions;
-}
-
-try {
-  writeDatabaseSSL = writeDatabaseSSLEnv
-    ? JSON.parse(writeDatabaseSSLEnv)
-    : undefined;
-} catch (error) {
-  writeDatabaseSSL = writeDatabaseSSLEnv;
-}
+const writeDatabaseSSL = parse<
+  boolean | ConnectionOptions | ConnectionOptions | string
+>(writeDatabaseSSLEnv);
 
 const writeDatabaseConnectionTimeout =
   process.env.DATABASE_CONNECTION_TIMEOUT ||
@@ -88,8 +74,12 @@ const eventInfo =
           process.env.DATABASE_NAME ||
           process.env.DATABASE_WRITE_NAME ||
           'write',
-        host: process.env.DATABASE_HOST || process.env.DATABASE_WRITE_HOST,
-        port: process.env.DATABASE_PORT || process.env.DATABASE_WRITE_PORT,
+        host: parse(
+          process.env.DATABASE_HOST || process.env.DATABASE_WRITE_HOST
+        ),
+        port: parse(
+          process.env.DATABASE_PORT || process.env.DATABASE_WRITE_PORT
+        ),
         username: process.env.DATABASE_USER || process.env.DATABASE_WRITE_USER,
         password:
           process.env.DATABASE_PASSWORD || process.env.DATABASE_WRITE_PASSWORD,
@@ -98,46 +88,24 @@ const eventInfo =
         requestTimeout: writeDatabaseRequestTimeoutNumber,
       };
 
-let readDatabaseOptions: object | string | undefined =
-  process.env.DATABASE_OPTIONS || process.env.DATABASE_READ_OPTIONS;
 const readDatabaseSSLEnv =
   process.env.DATABASE_SSL || process.env.DATABASE_READ_SSL || 'false';
-let readDatabaseSSL:
-  | boolean
-  | ConnectionOptions
-  | ConnectionOptions
-  | string
-  | undefined;
 
-try {
-  readDatabaseOptions = readDatabaseOptions
-    ? JSON.parse(readDatabaseOptions)
-    : undefined;
-} catch (error) {
-  readDatabaseOptions = readDatabaseOptions;
-}
+let readDatabaseOptions = parse<object | string>(
+  process.env.DATABASE_OPTIONS || process.env.DATABASE_READ_OPTIONS
+);
 
 const readDatabaseAdditionalParamsString: string | undefined =
   process.env.DATABASE_ADDITIONAL_PARAMS ||
   process.env.DATABASE_READ_ADDITIONAL_PARAMS;
 
-let readDatabaseAdditionalParams: { [key: string]: any } | undefined;
+const readDatabaseAdditionalParams = parse<{ [key: string]: any }>(
+  readDatabaseAdditionalParamsString
+);
 
-try {
-  readDatabaseAdditionalParams = readDatabaseAdditionalParamsString
-    ? JSON.parse(readDatabaseAdditionalParamsString)
-    : undefined;
-} catch (error) {
-  writeDatabaseOptions = writeDatabaseOptions;
-}
-
-try {
-  readDatabaseSSL = readDatabaseSSLEnv
-    ? JSON.parse(readDatabaseSSLEnv)
-    : undefined;
-} catch (error) {
-  readDatabaseSSL = readDatabaseSSLEnv;
-}
+const readDatabaseSSL = parse<
+  boolean | ConnectionOptions | ConnectionOptions | string
+>(readDatabaseSSLEnv);
 
 const readDatabaseConnectionTimeout =
   process.env.DATABASE_CONNECTION_TIMEOUT ||
@@ -184,8 +152,12 @@ const readInfo =
         options: readDatabaseOptions,
         database:
           process.env.DATABASE_NAME || process.env.DATABASE_READ_NAME || 'read',
-        host: process.env.DATABASE_HOST || process.env.DATABASE_READ_HOST,
-        port: process.env.DATABASE_PORT || process.env.DATABASE_READ_PORT,
+        host: parse(
+          process.env.DATABASE_HOST || process.env.DATABASE_READ_HOST
+        ),
+        port: parse(
+          process.env.DATABASE_PORT || process.env.DATABASE_READ_PORT
+        ),
         username: process.env.DATABASE_USER || process.env.DATABASE_READ_USER,
         password:
           process.env.DATABASE_PASSWORD || process.env.DATABASE_READ_PASSWORD,
